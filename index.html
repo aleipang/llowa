@@ -1974,7 +1974,7 @@ allNums.forEach(num => {
     numTotalCount[num] = sum;
 });
 
-// 7. 新排序逻辑：中高 → 中低 → 最高 → 最少
+/// 7. 新排序逻辑：中高 → 最高 → 中低 → 最少
 const countsArr = Object.values(numTotalCount);
 const maxCount = Math.max(...countsArr);
 const minCount = Math.min(...countsArr);
@@ -1984,13 +1984,16 @@ const median = sortedCounts.length % 2 === 0
     ? (sortedCounts[midIdx - 1] + sortedCounts[midIdx]) / 2
     : sortedCounts[midIdx];
 
-const midHigh = allNums.filter(num => numTotalCount[num] < maxCount && numTotalCount[num] > median);
-const midLow  = allNums.filter(num => numTotalCount[num] > minCount && numTotalCount[num] < median);
+// 中高：大于中位数且小于最大值
+const midHigh = allNums.filter(num => numTotalCount[num] > median && numTotalCount[num] < maxCount);
+// 最高：等于最大值
 const highest = allNums.filter(num => numTotalCount[num] === maxCount);
+// 中低：大于最小值且小于等于中位数
+const midLow  = allNums.filter(num => numTotalCount[num] > minCount && numTotalCount[num] <= median);
+// 最少：等于最小值
 const lowest  = allNums.filter(num => numTotalCount[num] === minCount);
 
-allNums = [...midHigh, ...midLow, ...highest, ...lowest];
-
+allNums = [...midHigh, ...highest, ...midLow, ...lowest];
 // 8. 递进分组
 const groupSizes = [24, 18, 12, 8, 6, 4, 2, 1];
 let groupResults = [];
